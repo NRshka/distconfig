@@ -59,7 +59,7 @@ class ConfigHandler:
 
         if extension not in self.parsers:
             raise ValueError(
-                f"No suitable parse for extension {extension} of path {path}"
+                f"No suitable parser for extension {extension} of path {path}"
             )
 
         return self.parsers[extension]
