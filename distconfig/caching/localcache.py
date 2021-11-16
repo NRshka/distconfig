@@ -8,7 +8,7 @@ class LocalLFUCache(Cache):
         self.cache: LFUCache = LFUCache(maxsize=maxsize)
 
     def get(self, key):
-        return self.get(key)
+        return self.cache.get(key)
 
     def set(self, key, value):
         self.cache[key] = value
