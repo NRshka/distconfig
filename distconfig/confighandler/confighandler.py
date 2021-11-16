@@ -1,6 +1,5 @@
 from typing import Dict
 import os
-from cachetools import LFUCache
 
 from .parsers.parser import AbstractConfigParser
 
@@ -9,12 +8,15 @@ class ConfigHandler:
     def __init__(
         self,
         parsers: Dict[str, AbstractConfigParser],
-        cfg_dir: str
+        cfg_dir: str,
+        cache_util
     ):
         self.parsers = parsers
         self.cfg_dir = cfg_dir
         self.directory_structure: Dict[str, set] = {}
-        self.configs_cache: LFUCache = LFUCache(maxsize=32)
+        self.configs_cache = cache_util
+
+        self.check_volume_valid(cfg_dir)
 
     def check_volume_valid(self, cfg_dir: str):
         service_names = os.listdir(cfg_dir)
@@ -42,7 +44,7 @@ class ConfigHandler:
             raise RuntimeError('No such service_name and/or config_name')
 
         config = self.parse_config_file(os.path.join(self.cfg_dir, service_name, config_name))
-        self.configs_cache[cache_key] = config
+        self.configs_cache.set(cache_key, config)
 
         return config
 
