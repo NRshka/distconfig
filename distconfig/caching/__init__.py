@@ -1,4 +1,4 @@
-from .cachetools import LocalLFUCache
+from .localcache import LocalLFUCache
 
 
 __all__ = [
