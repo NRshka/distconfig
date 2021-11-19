@@ -12,7 +12,7 @@ config_dict = {}
 
 
 @pytest.fixture()
-def fake_json(fs):  # pylint:disable=invalid-name
+def fake_json(fs):
     """Variable name 'fs' causes a pylint warning. Provide a longer name
     acceptable to pylint for use in tests.
     """
