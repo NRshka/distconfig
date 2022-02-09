@@ -20,7 +20,13 @@ def read_db_config_from_envs():
     if database_port:
         database_port = int(database_port)
 
-    return (database_host, database_login, database_password, database_name, database_port)
+    return (
+        database_host,
+        database_login,
+        database_password,
+        database_name,
+        database_port,
+    )
 
 
 class AbstractDatabase:
@@ -30,7 +36,7 @@ class AbstractDatabase:
         login: str,
         password: str,
         database: str,
-        port: Optional[Union[str, int]]
+        port: Optional[Union[str, int]],
     ):
         self.host = host
         self.login = login
@@ -45,4 +51,7 @@ class AbstractDatabase:
         raise NotImplementedError("AbstractDatabase")
 
     def get_users(self, username: str, password_hash: str) -> list:
+        raise NotImplementedError("AbstractDatabase")
+
+    def register_user(self, username: str, email: str, password_hash: str):
         raise NotImplementedError("AbstractDatabase")

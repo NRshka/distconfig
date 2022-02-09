@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Any, Tuple, Union, Optional
 import asyncio
 import asyncpg
 
@@ -12,11 +12,11 @@ class PostgresDatabase(AbstractDatabase):
         login: str,
         password: str,
         database: str,
-        port: Optional[Union[str, int]]
+        port: Optional[Union[str, int]],
     ):
-        print('\tHOST:', host)
-        print('\tLogind:', login)
-        print('\tPassword:', password)
+        print("\tHOST:", host)
+        print("\tLogind:", login)
+        print("\tPassword:", password)
         super().__init__(host, login, password, database, port)
         self.loop = asyncio.get_event_loop()
         self.postgres_conn = self.loop.run_until_complete(self.connect())
@@ -27,17 +27,17 @@ class PostgresDatabase(AbstractDatabase):
             user=self.login,
             password=self.password,
             database=self.database_name,
-            port=self.port
+            port=self.port,
         )
 
     def execute_sql(self, sql_command: str):
         return self.loop.run_until_complete(self.execute_sql_(sql_command))
 
-    async def execute_sql_(self, sql_command: str):
+    async def execute_sql_(self, sql_command: str, args: Tuple[Any]):
         async with self.postgres_conn.transaction():
-            answer = await self.postgres_conn.execute(sql_command)
+            cursor = await self.postgres_conn.execute(sql_command, *args)
 
-        return answer
+        return cursor
 
     def get_users(self, username: str, password_hash: str) -> list:
         """Fetch records with related provided username and password
@@ -50,8 +50,40 @@ class PostgresDatabase(AbstractDatabase):
             self.postgres_conn.fetch(
                 "SELECT * FROM USERS WHERE (passw = $1) AND (username = $2);",
                 password_hash,
-                username
+                username,
             )
         )
 
         return users
+
+    async def fetch_value(self, sql_command: str, args: Tuple[Any]):
+        data = await self.postgres_conn.fetchval(sql_command, *args)
+        return data
+
+    async def register_(self, username: str, email: str, password_hash: str, fullname: str, job_role: str, department: str) -> int:
+        cursor = await self.execute_sql_(
+            """INSERT INTO USERS(username, email, passw, full_name, job_role, department) """
+            """VALUES($1, $2, $3, $4, $5, $6) RETURNING id;""",
+            (username, email, password_hash, fullname, job_role, department)
+        )
+        id_of_new_row = cursor.fetchone()[0]
+
+        return id_of_new_row
+
+
+    def register_user(self, username: str, email: str, password_hash: str, fullname: str, job_role: str, department: str):
+        # TODO check if username already exists
+        new_user_id = self.loop.run_until_complete(
+            self.register_(username, email, password_hash, fullname, job_role, department)
+        )
+
+        return new_user_id
+
+    def get_username_by_id(self, user_id: int) -> Optional[str]:
+        username = self.loop.run_until_complete(
+            self.fetch_value(
+                """SELECT username FROM USERS WHERE id=$1;""", (user_id,)
+            )
+        )
+
+        return username

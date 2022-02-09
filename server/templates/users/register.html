@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Register new account to work with distconfig{% endblock %}
+{% from "formshelper.html" import render_field %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6">
+    <form action="{{ url_for('register_user') }}" method="POST">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ render_field(form.username, class="form-control", placeholder="Username") }}
+        </div>
+        <div class="form-group">
+          {{ form.email.label }}
+          {{ render_field(form.email, class="form-control", placeholder="Email address") }}
+        </div>
+        <div class="form-group">
+          {{ form.password.label }}
+          {{ render_field(form.password, class="form-control", placeholder="Password") }}
+        </div>
+        <div class="form-group">
+          {{ form.confirm.label }}
+          {{ render_field(form.confirm, class="form-control", placeholder="Confirm password") }}
+        </div>
+        <div class="form-group">
+            {{ form.fullname.label }}
+            {{ render_field(form.fullname, class="form-control", placeholder="Full name") }}
+          </div>
+        <input type="submit" value="Get Started!" class="btn btn-lg btn-success">
+    </form>
+  </div>
+  <div class="col-md-6">
+    <h3>Register new account</h3>
+    <h4>No matter where your app are located.</h4>
+    <p>With DistConfig you can work with independently of the app:</p>
+    <p>
+      <ul>
+        <li>Dynamically change the configs.</li>
+        <li>Don't be afraid of the leaks.</li>
+        <li>Flexible system of controls, roles and permissions.</li>
+      </ul>
+    </p>
+    <p></p>
+  </div>
+</div>
+
+{% endblock %}
