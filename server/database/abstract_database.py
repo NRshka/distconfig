@@ -53,5 +53,5 @@ class AbstractDatabase:
     def get_users(self, username: str, password_hash: str) -> list:
         raise NotImplementedError("AbstractDatabase")
 
-    def register_user(self, username: str, email: str, password_hash: str):
+    def register_user(self, username: str, email: str, password_hash: str, fullname: str, job_role: str, department: str):
         raise NotImplementedError("AbstractDatabase")
