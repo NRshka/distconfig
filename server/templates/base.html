@@ -23,14 +23,14 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           {% if current_user.is_authenticated %}
-          <li class="nav-item {% if 'datasets' in request.path or 'images' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{{ url_for('datasets.index') }}">Services</a>
+          <li class="nav-item {% if 'services' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{{ url_for('services.services_list') }}">Services</a>
           </li>
-          <li class="nav-item {% if 'maintenance' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{{ url_for('maintenance.index') }}">Configs</a>
+          <li class="nav-item {% if 'configs' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{{ url_for('configs.configs_list') }}">Configs</a>
           </li>
-          <li class="nav-item {% if 'todo' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{{ url_for('todo.index') }}">Users</a>
+          <li class="nav-item {% if 'users' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{{ url_for('users_list') }}">Users</a>
           </li>
           
           <li class="nav-item dropdown">
@@ -38,12 +38,12 @@
               {{current_user.email}}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{ url_for('users.user_profile') }}">My Profile</a>
+              <a class="dropdown-item" href="{{ url_for('user_profile') }}">My Profile</a>
               {% if current_user.role == "admin" %}
               <a class="dropdown-item" href="{{ url_for('users.admin_dashboard') }}">Admin Dashboard</a>
               {% endif %}
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{ url_for('users.logout') }}">Log Out</a>
+              <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
             </div>
           </li>
           {% else %}

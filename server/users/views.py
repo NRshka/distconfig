@@ -45,3 +45,21 @@ def register_user():
             return redirect(url_for("index_page"))
 
     return render_template("users/register.html", form=form)
+
+
+@app.route("/users", methods=["GET"])
+def users_list():
+    pass
+
+
+@app.route("/logout", methods=["GET"])
+def logout():
+    pass
+
+
+@app.route("/user_profile", methods=["GET"])
+def user_profile():
+    pass
+
+
+
